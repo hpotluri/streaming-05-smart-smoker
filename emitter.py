@@ -1,5 +1,7 @@
 """
+Harinya Potluri 
 
+5/27/24
 
 """
 
@@ -14,6 +16,11 @@ from util_logger import setup_logger
 
 
 logging, logname = setup_logger(__file__)
+
+HOST = "localhost"
+QUEUE1 = "SmokerTemps"
+QUEUE2 = "FoodATemps"
+QUEUE3 = "FoddBTemps"
 
 def offer_rabbitmq_admin_site():
     """Offer to open the RabbitMQ Admin website"""
@@ -44,6 +51,7 @@ def send_message(host: str, queue_name: str, message: str):
         # and help ensure messages are processed in order
         # messages will not be deleted until the consumer acknowledges
         ch.queue_declare(queue=queue_name, durable=True)
+
         # use the channel to publish a message to the queue
         # every message passes through an exchange
         ch.basic_publish(exchange="", routing_key=queue_name, body=message)
@@ -72,8 +80,8 @@ def readData(filename):
     with open(filename, 'r') as csvFile: #Opeing the file 
         file = csv.reader(csvFile,delimiter='\n') #Reads the whole file 
         for row in file: #Looping through the file and adding each line as a string to the list. 
-            rowSplit = row[0].split(',')
-            listofTimes.append((rowSplit[0]))
+            rowSplit = row[0].split(',') #Splits up the row in the data by comma 
+            listofTimes.append((rowSplit[0])) #Assign each one based on the order they are in
             listofSmokerTemps.append((rowSplit[1]))
             listofFoodATemp.append((rowSplit[2]))
             listofFoodBTemps.append((rowSplit[3]))
@@ -92,18 +100,21 @@ if __name__ == "__main__":
         offer_rabbitmq_admin_site()
 
 
-    #This is how i authmate my messages
+    #This is how the data from the CSV is pulled ad cleaned up 
     TimeList, SmokerTempList, FoodAList, FoodBList = readData("smoker-temps.csv")
     TimeList.pop(0)
     SmokerTempList.pop(0)
     FoodAList.pop(0) 
     FoodBList.pop(0)
-    headers = ["Smoker", "FoodA", "FoodB"]
 
+    #This is used for pretty printing 
+    headers = ["Smoker", "FoodA", "FoodB"]
     # Print headers
     print("{:<10} {:<10} {:<10}".format(*headers))
 
-    # Print data in a table format
     for i in range(len(TimeList)):
-        print("{:<10} {:<10} {:<10}".format(SmokerTempList[i], FoodAList[i], FoodBList[i]))
-        time.sleep(.5)
+        print("{:<10} {:<10} {:<10}".format(SmokerTempList[i], FoodAList[i], FoodBList[i])) #Proof it is streaming the right data 
+        time.sleep(.5) #Need to change to 30 secs but for testing this is preferable 
+        send_message(HOST, QUEUE1, SmokerTempList[i]) #Sends all of the messages by using a queuename and creating a queue each time. 
+        send_message(HOST, QUEUE2, FoodAList[i])
+        send_message(HOST, QUEUE3, FoodBList[i])
