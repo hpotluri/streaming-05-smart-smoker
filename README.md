@@ -25,3 +25,7 @@ I used the same tempalte as the HW 4 Emitter. The main changes made was to the h
 
 ## Image of code running 
 ![alt text](image.png)
+
+I made this after changning some of the print statements. 
+
+![alt text](image-1.png)

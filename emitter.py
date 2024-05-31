@@ -56,7 +56,7 @@ def send_message(host: str, queue_name: str, message: str):
         # every message passes through an exchange
         ch.basic_publish(exchange="", routing_key=queue_name, body=message)
         # print a message to the console for the user
-        print(f" [x] Sent {message}")
+        print(f" [x] Sent {message} to {queue_name}")
     except pika.exceptions.AMQPConnectionError as e:
         print(f"Error: Connection to RabbitMQ server failed: {e}")
         sys.exit(1)
@@ -107,13 +107,9 @@ if __name__ == "__main__":
     FoodAList.pop(0) 
     FoodBList.pop(0)
 
-    #This is used for pretty printing 
-    headers = ["Smoker", "FoodA", "FoodB"]
-    # Print headers
-    print("{:<10} {:<10} {:<10}".format(*headers))
+    
 
     for i in range(len(TimeList)):
-        print("{:<10} {:<10} {:<10}".format(SmokerTempList[i], FoodAList[i], FoodBList[i])) #Proof it is streaming the right data 
         time.sleep(.5) #Need to change to 30 secs but for testing this is preferable 
         if SmokerTempList[i]:
             send_message(HOST, QUEUE1, SmokerTempList[i]) #Sends all of the messages by using a queuename and creating a queue each time. 
