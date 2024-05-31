@@ -115,6 +115,9 @@ if __name__ == "__main__":
     for i in range(len(TimeList)):
         print("{:<10} {:<10} {:<10}".format(SmokerTempList[i], FoodAList[i], FoodBList[i])) #Proof it is streaming the right data 
         time.sleep(.5) #Need to change to 30 secs but for testing this is preferable 
-        send_message(HOST, QUEUE1, SmokerTempList[i]) #Sends all of the messages by using a queuename and creating a queue each time. 
-        send_message(HOST, QUEUE2, FoodAList[i])
-        send_message(HOST, QUEUE3, FoodBList[i])
+        if SmokerTempList[i]:
+            send_message(HOST, QUEUE1, SmokerTempList[i]) #Sends all of the messages by using a queuename and creating a queue each time. 
+        if FoodAList[i]:
+            send_message(HOST, QUEUE2, FoodAList[i])
+        if FoodBList[i]:
+            send_message(HOST, QUEUE3, FoodBList[i])
