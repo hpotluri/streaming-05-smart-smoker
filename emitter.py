@@ -20,7 +20,8 @@ logging, logname = setup_logger(__file__)
 HOST = "localhost"
 QUEUE1 = "SmokerTemps"
 QUEUE2 = "FoodATemps"
-QUEUE3 = "FoddBTemps"
+QUEUE3 = "FoodBTemps"
+QUEUE4 = "TimeStamp"
 
 def offer_rabbitmq_admin_site():
     """Offer to open the RabbitMQ Admin website"""
@@ -110,7 +111,9 @@ if __name__ == "__main__":
     
 
     for i in range(len(TimeList)):
-        time.sleep(.5) #Need to change to 30 secs but for testing this is preferable 
+        #time.sleep(.5) #Need to change to 30 secs but for testing this is preferable 
+        if TimeList[i]: 
+            send_message(HOST, QUEUE4, TimeList[i])
         if SmokerTempList[i]:
             send_message(HOST, QUEUE1, SmokerTempList[i]) #Sends all of the messages by using a queuename and creating a queue each time. 
         if FoodAList[i]:
