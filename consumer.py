@@ -16,8 +16,8 @@ QUEUE2 = "FoodATemps"
 QUEUE3 = "FoodBTemps"
 
 # TODO: Add your own email and password
-sender_email = 'hpotluri672@gmail.com'
-sender_password = 'zxrv byqm dhpt svst'
+sender_email = ''
+sender_password = ''
 
 # Queues for storing data
 smokerQueue = deque(maxlen=5)
